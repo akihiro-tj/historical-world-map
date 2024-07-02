@@ -1,5 +1,5 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "plugin:storybook/recommended"],
   "plugins": ["import"],
   "rules": {
     "import/order": [
@@ -7,7 +7,10 @@
       {
         "groups": [["builtin", "external", "internal"]],
         "newlines-between": "always",
-        "alphabetize": { "order": "asc", "caseInsensitive": true }
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
       }
     ]
   }
