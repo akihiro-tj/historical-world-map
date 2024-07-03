@@ -11,6 +11,12 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@deck.gl/core": "^9.0.20",
+    "@deck.gl/extensions": "^9.0.20",
+    "@deck.gl/geo-layers": "^9.0.20",
+    "@deck.gl/layers": "^9.0.20",
+    "@deck.gl/react": "^9.0.20",
+    "@loaders.gl/pmtiles": "^4.2.2",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18"
