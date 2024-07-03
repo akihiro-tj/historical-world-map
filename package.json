@@ -17,6 +17,7 @@
     "@deck.gl/layers": "^9.0.20",
     "@deck.gl/react": "^9.0.20",
     "@loaders.gl/pmtiles": "^4.2.2",
+    "@radix-ui/react-dialog": "^1.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.400.0",
