@@ -11,15 +11,16 @@ import {
 import { FC, MouseEventHandler, useMemo } from 'react';
 
 export interface MapModalContentProps {
+  isOpen: boolean;
   onClose: MouseEventHandler<HTMLElement>;
-  mapProps: MapProps | null;
+  focusedMapFeature?: MapProps['focusedMapFeature'];
 }
 
 export const MapModalContent: FC<MapModalContentProps> = ({
+  isOpen,
   onClose,
-  mapProps,
+  focusedMapFeature,
 }) => {
-  const isOpen = useMemo(() => !!mapProps, [mapProps]);
   return (
     <Sheet open={isOpen}>
       <SheetContent onClose={onClose}>
@@ -27,7 +28,7 @@ export const MapModalContent: FC<MapModalContentProps> = ({
           <SheetTitle>title</SheetTitle>
           <SheetDescription>description</SheetDescription>
         </SheetHeader>
-        {mapProps && <Map {...mapProps} />}
+        <Map focusedMapFeature={focusedMapFeature} />
       </SheetContent>
     </Sheet>
   );

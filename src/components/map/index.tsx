@@ -36,12 +36,19 @@ type GeoJsonFeature = {
   id: string;
 };
 
-export interface MapProps {
+type FocusedMapFeature = {
+  id?: string;
   year: string;
-  focusId: string;
+};
+
+export interface MapProps {
+  focusedMapFeature?: FocusedMapFeature;
 }
 
-export const Map: FC<MapProps> = ({ year, focusId }) => {
+export const Map: FC<MapProps> = ({ focusedMapFeature }) => {
+  const year = focusedMapFeature?.year;
+  const focusedId = focusedMapFeature?.id;
+
   const basemapLayer = useMemo(() => {
     return new TileLayer({
       id: 'basemap-layer',
@@ -64,6 +71,7 @@ export const Map: FC<MapProps> = ({ year, focusId }) => {
   }, []);
 
   const featureTileSource = useMemo(() => {
+    if (!year) return null;
     return new PMTilesSource({
       // TODO: Replace url
       url: `http://localhost:2999/${year}.pmtiles`,
@@ -71,6 +79,7 @@ export const Map: FC<MapProps> = ({ year, focusId }) => {
   }, [year]);
 
   const featureLayer = useMemo(() => {
+    if (!featureTileSource) return null;
     return new TileLayer({
       id: 'feature-layer',
       ...ZOOM_SETTINGS,
@@ -85,17 +94,17 @@ export const Map: FC<MapProps> = ({ year, focusId }) => {
           lineWidthScale: 1,
           lineWidthMinPixels: 2,
           getLineColor: (d) =>
-            d.properties.id === focusId
+            d.properties.id === focusedId
               ? [200, 100, 100, 200]
               : [200, 100, 100, 50],
           getFillColor: (d) =>
-            d.properties.id === focusId
+            d.properties.id === focusedId
               ? [200, 100, 100, 100]
               : [200, 100, 100, 25],
         });
       },
     });
-  }, [featureTileSource, focusId]);
+  }, [featureTileSource, focusedId]);
 
   return (
     <DeckGL
