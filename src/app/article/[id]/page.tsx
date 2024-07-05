@@ -1,3 +1,4 @@
+import { MapModal } from '@/components/map-modal';
 import { MarkdownArticleRepository } from '@/infrastructure/fs/markdown-article-repository';
 
 const articleRepository = new MarkdownArticleRepository();
@@ -14,6 +15,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
     <div>
       <div dangerouslySetInnerHTML={{ __html: article.contentHtml }} />
+      <MapModal />
     </div>
   );
 }
