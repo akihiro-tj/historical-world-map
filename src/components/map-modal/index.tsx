@@ -1,15 +1,30 @@
 'use client';
 
+import { MapProps } from '@/components/map';
 import { MapModalContent } from '@/components/map-modal-content';
-import { FC, MouseEventHandler, useCallback, useEffect, useState } from 'react';
+import {
+  FC,
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 export const MapModal: FC = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [focusedMapFeature, setFocusedMapFeature] =
+    useState<MapProps['focusedMapFeature']>();
+  const showModal = useMemo(() => !!focusedMapFeature, [focusedMapFeature]);
 
   useEffect(() => {
     const handleHashChange = () => {
-      const showModal = window.location.hash.startsWith('#');
-      setShowModal(showModal);
+      const hasHash = window.location.hash.match(/^#.+-.+/);
+      if (hasHash) {
+        const [year, id] = window.location.hash.slice(1).split('-');
+        setFocusedMapFeature({ year, id });
+      } else {
+        setFocusedMapFeature(undefined);
+      }
     };
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
@@ -22,5 +37,11 @@ export const MapModal: FC = () => {
     window.location.hash = '';
   }, []);
 
-  return <MapModalContent isOpen={showModal} onClose={handleModalClose} />;
+  return (
+    <MapModalContent
+      isOpen={showModal}
+      onClose={handleModalClose}
+      focusedMapFeature={focusedMapFeature}
+    />
+  );
 };
