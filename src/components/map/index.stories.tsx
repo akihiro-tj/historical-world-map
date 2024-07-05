@@ -9,3 +9,12 @@ export default meta;
 type Story = StoryObj<typeof Map>;
 
 export const Default: Story = {};
+
+export const Focused: Story = {
+  args: {
+    focusedMapFeature: {
+      id: 'spain',
+      year: '1815',
+    },
+  },
+};

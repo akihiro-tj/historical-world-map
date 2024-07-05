@@ -1,6 +1,6 @@
 'use client';
 
-import { Map } from '@/components/map';
+import { Map, MapProps } from '@/components/map';
 import {
   Sheet,
   SheetContent,
@@ -8,16 +8,18 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/shadcn-ui/sheet';
-import { FC, MouseEventHandler } from 'react';
+import { FC, MouseEventHandler, useMemo } from 'react';
 
 export interface MapModalContentProps {
   isOpen: boolean;
   onClose: MouseEventHandler<HTMLElement>;
+  focusedMapFeature?: MapProps['focusedMapFeature'];
 }
 
 export const MapModalContent: FC<MapModalContentProps> = ({
   isOpen,
   onClose,
+  focusedMapFeature,
 }) => {
   return (
     <Sheet open={isOpen}>
@@ -26,7 +28,7 @@ export const MapModalContent: FC<MapModalContentProps> = ({
           <SheetTitle>title</SheetTitle>
           <SheetDescription>description</SheetDescription>
         </SheetHeader>
-        <Map />
+        <Map focusedMapFeature={focusedMapFeature} />
       </SheetContent>
     </Sheet>
   );
