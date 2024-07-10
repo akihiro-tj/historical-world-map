@@ -12,5 +12,15 @@ export const Default: Story = {
   args: {
     isOpen: true,
     onClose: () => {},
+    mapProps: {
+      // TODO: Replace url
+      featureTileSourceURL: 'http://localhost:2999/1815.pmtiles',
+      focusedFeatureId: 'spain',
+      initialViewState: {
+        longitude: -3.7492,
+        latitude: 40.4637,
+        zoom: 3,
+      },
+    },
   },
 };

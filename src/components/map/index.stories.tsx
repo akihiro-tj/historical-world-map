@@ -8,13 +8,25 @@ const meta: Meta<typeof Map> = {
 export default meta;
 type Story = StoryObj<typeof Map>;
 
-export const Default: Story = {};
+// TODO: Replace url
+const featureTileSourceURL = 'http://localhost:2999/1815.pmtiles';
+const initialViewState = {
+  longitude: -3.7492,
+  latitude: 40.4637,
+  zoom: 3,
+};
+
+export const Default: Story = {
+  args: {
+    featureTileSourceURL,
+    initialViewState,
+  },
+};
 
 export const Focused: Story = {
   args: {
-    focusedMapFeature: {
-      id: 'spain',
-      year: '1815',
-    },
+    featureTileSourceURL,
+    focusedFeatureId: 'spain',
+    initialViewState,
   },
 };

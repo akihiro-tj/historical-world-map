@@ -1,5 +1,6 @@
 'use client';
 
+import { MapViewState } from '@deck.gl/core';
 import { ClipExtension } from '@deck.gl/extensions';
 import { TileLayer } from '@deck.gl/geo-layers';
 import { GeoJsonLayer } from '@deck.gl/layers';
@@ -7,12 +8,10 @@ import DeckGL from '@deck.gl/react';
 import { PMTilesSource } from '@loaders.gl/pmtiles';
 import { FC, useMemo } from 'react';
 
-const INITIAL_VIEW_STATE = {
-  longitude: -3.7492,
-  latitude: 40.4637,
-  zoom: 3,
-  pitch: 0,
-  bearing: 0,
+const INITIAL_VIEW_STATE: MapViewState = {
+  longitude: 139.6917,
+  latitude: 35.6895,
+  zoom: 2,
 };
 
 const ZOOM_SETTINGS = {
@@ -36,19 +35,17 @@ type GeoJsonFeature = {
   id: string;
 };
 
-type FocusedMapFeature = {
-  id?: string;
-  year: string;
-};
-
 export interface MapProps {
-  focusedMapFeature?: FocusedMapFeature;
+  featureTileSourceURL: string;
+  focusedFeatureId?: string;
+  initialViewState?: MapViewState;
 }
 
-export const Map: FC<MapProps> = ({ focusedMapFeature }) => {
-  const year = focusedMapFeature?.year;
-  const focusedId = focusedMapFeature?.id;
-
+export const Map: FC<MapProps> = ({
+  featureTileSourceURL,
+  focusedFeatureId,
+  initialViewState = INITIAL_VIEW_STATE,
+}) => {
   const basemapLayer = useMemo(() => {
     return new TileLayer({
       id: 'basemap-layer',
@@ -71,15 +68,10 @@ export const Map: FC<MapProps> = ({ focusedMapFeature }) => {
   }, []);
 
   const featureTileSource = useMemo(() => {
-    if (!year) return null;
-    return new PMTilesSource({
-      // TODO: Replace url
-      url: `http://localhost:2999/${year}.pmtiles`,
-    });
-  }, [year]);
+    return new PMTilesSource({ url: featureTileSourceURL });
+  }, [featureTileSourceURL]);
 
   const featureLayer = useMemo(() => {
-    if (!featureTileSource) return null;
     return new TileLayer({
       id: 'feature-layer',
       ...ZOOM_SETTINGS,
@@ -94,21 +86,21 @@ export const Map: FC<MapProps> = ({ focusedMapFeature }) => {
           lineWidthScale: 1,
           lineWidthMinPixels: 2,
           getLineColor: (d) =>
-            d.properties.id === focusedId
+            d.properties.id === focusedFeatureId || !focusedFeatureId
               ? [200, 100, 100, 200]
               : [200, 100, 100, 50],
           getFillColor: (d) =>
-            d.properties.id === focusedId
+            d.properties.id === focusedFeatureId || !focusedFeatureId
               ? [200, 100, 100, 100]
               : [200, 100, 100, 25],
         });
       },
     });
-  }, [featureTileSource, focusedId]);
+  }, [featureTileSource, focusedFeatureId]);
 
   return (
     <DeckGL
-      initialViewState={INITIAL_VIEW_STATE}
+      initialViewState={initialViewState}
       controller
       layers={[basemapLayer, featureLayer]}
     />
