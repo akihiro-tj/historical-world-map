@@ -1,37 +1,18 @@
 'use client';
 
 import { MapProps } from '@/components/map';
+import { useLocationHash } from '@/components/map-modal/use-location-hash';
 import { MapModalContent } from '@/components/map-modal-content';
-import {
-  FC,
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { MapFeatureRepositoryImpl } from '@/infrastructure/http/map-feature-repository';
+import { FC, MouseEventHandler, useCallback, useMemo } from 'react';
+import useSWR from 'swr';
+
+const mapFeatureRepository = new MapFeatureRepositoryImpl();
 
 export const MapModal: FC = () => {
-  const [focusedMapFeature, setFocusedMapFeature] =
-    useState<MapProps['focusedMapFeature']>();
-  const showModal = useMemo(() => !!focusedMapFeature, [focusedMapFeature]);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hasHash = window.location.hash.match(/^#.+-.+/);
-      if (hasHash) {
-        const [year, id] = window.location.hash.slice(1).split('-');
-        setFocusedMapFeature({ year, id });
-      } else {
-        setFocusedMapFeature(undefined);
-      }
-    };
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, []);
+  const { hash } = useLocationHash();
+  const { data } = useSWR(hash, fetcher);
+  const showModal = useMemo(() => !!data, [data]);
 
   const handleModalClose: MouseEventHandler<HTMLElement> = useCallback(() => {
     window.location.hash = '';
@@ -41,7 +22,29 @@ export const MapModal: FC = () => {
     <MapModalContent
       isOpen={showModal}
       onClose={handleModalClose}
-      focusedMapFeature={focusedMapFeature}
+      mapProps={data}
     />
   );
 };
+
+async function fetcher(
+  hash: string | undefined
+): Promise<MapProps | undefined> {
+  if (!hash) return;
+  const [year, focusedFeatureId] = hash.split('-');
+  const focusedFeature = await mapFeatureRepository.getByYearAndFeatureId(
+    year,
+    focusedFeatureId
+  );
+  const initialViewState = {
+    longitude: focusedFeature.longitude,
+    latitude: focusedFeature.latitude,
+    zoom: focusedFeature.zoom,
+  };
+  return {
+    // TODO: Replace url
+    featureTileSourceURL: `http://localhost:2999/${year}.pmtiles`,
+    focusedFeatureId,
+    initialViewState,
+  };
+}
