@@ -11,7 +11,7 @@ const frontMatterSchema = z.object({
   title: z.string(),
 });
 
-export class MarkdownArticleRepository implements ArticleRepository {
+export class ArticleRepositoryImpl implements ArticleRepository {
   private articlesDir = path.join(process.cwd(), 'articles');
 
   async getById(id: string): Promise<Article> {
