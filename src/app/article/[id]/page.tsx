@@ -1,7 +1,7 @@
 import { MapModal } from '@/components/map-modal';
-import { MarkdownArticleRepository } from '@/infrastructure/fs/markdown-article-repository';
+import { ArticleRepositoryImpl } from '@/infrastructure/file-system/article-repository';
 
-const articleRepository = new MarkdownArticleRepository();
+const articleRepository = new ArticleRepositoryImpl();
 
 type ArticlePageProps = {
   params: {
@@ -10,7 +10,7 @@ type ArticlePageProps = {
 };
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  const article = await articleRepository.findById(params.id);
+  const article = await articleRepository.getById(params.id);
 
   return (
     <div>
@@ -21,7 +21,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 }
 
 export async function generateStaticParams() {
-  const articleRepository = new MarkdownArticleRepository();
-  const ids = await articleRepository.findAllIds();
+  const ids = await articleRepository.getAllIds();
   return ids.map((id) => ({ id }));
 }
