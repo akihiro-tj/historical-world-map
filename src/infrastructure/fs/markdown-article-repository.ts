@@ -14,7 +14,7 @@ const frontMatterSchema = z.object({
 export class MarkdownArticleRepository implements ArticleRepository {
   private articlesDir = path.join(process.cwd(), 'articles');
 
-  async findById(id: string): Promise<Article> {
+  async getById(id: string): Promise<Article> {
     const fullPath = path.join(this.articlesDir, `${id}.md`);
     const fileContent = fs.readFileSync(fullPath, 'utf-8');
     const { data, content } = matter(fileContent);
@@ -27,7 +27,7 @@ export class MarkdownArticleRepository implements ArticleRepository {
     return { id, title: frontMatter.title, contentHtml };
   }
 
-  async findAllIds(): Promise<string[]> {
+  async getAllIds(): Promise<string[]> {
     const fileNames = fs.readdirSync(this.articlesDir);
     return fileNames.map((fileName) => path.parse(fileName).name);
   }
