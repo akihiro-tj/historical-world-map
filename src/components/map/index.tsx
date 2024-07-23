@@ -6,7 +6,8 @@ import { TileLayer } from '@deck.gl/geo-layers';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import DeckGL from '@deck.gl/react';
 import { PMTilesSource } from '@loaders.gl/pmtiles';
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
+import { z } from 'zod';
 
 const INITIAL_VIEW_STATE: MapViewState = {
   longitude: 139.6917,
@@ -24,6 +25,10 @@ const basemapTileSource = new PMTilesSource({
   url: 'http://localhost:2999/ne_110m_land.pmtiles',
 });
 
+const geoJsonFeatureSchema = z.object({
+  id: z.string(),
+});
+
 type BBox = {
   west: number;
   south: number;
@@ -33,6 +38,12 @@ type BBox = {
 
 type GeoJsonFeature = {
   id: string;
+};
+
+type TooltipInfo = {
+  x: number;
+  y: number;
+  content: string;
 };
 
 export interface MapProps {
@@ -46,6 +57,8 @@ export const Map: FC<MapProps> = ({
   focusedFeatureId,
   initialViewState = INITIAL_VIEW_STATE,
 }) => {
+  const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo | null>(null);
+
   const basemapLayer = useMemo(() => {
     return new TileLayer({
       id: 'basemap-layer',
@@ -76,11 +89,25 @@ export const Map: FC<MapProps> = ({
       id: 'feature-layer',
       ...ZOOM_SETTINGS,
       getTileData: featureTileSource.getTileData,
+      pickable: true,
+      onHover: (info) => {
+        if (info.object) {
+          const properties = validateGeoJsonFeature(info.object.properties);
+          setTooltipInfo({
+            x: info.x,
+            y: info.y,
+            content: properties.id,
+          });
+        } else {
+          setTooltipInfo(null);
+        }
+      },
       renderSubLayers: ({ data, tile }) => {
         const bbox = tile.bbox as BBox;
         return new GeoJsonLayer<GeoJsonFeature, { clipBounds: number[] }>({
           id: `feature-layer--${tile.id}`,
           data,
+          pickable: true,
           extensions: [new ClipExtension()],
           clipBounds: [bbox.west, bbox.south, bbox.east, bbox.north],
           lineWidthScale: 1,
@@ -106,3 +133,11 @@ export const Map: FC<MapProps> = ({
     />
   );
 };
+
+function validateGeoJsonFeature(data: any) {
+  const result = geoJsonFeatureSchema.safeParse(data);
+  if (!result.success) {
+    throw new Error(`Invalid GeoJSON feature: ${result.error.message}`);
+  }
+  return result.data;
+}
