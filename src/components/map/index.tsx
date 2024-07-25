@@ -1,5 +1,6 @@
 'use client';
 
+import { Tooltip, TooltipProps } from '@/components/tooltip';
 import { MapViewState } from '@deck.gl/core';
 import { ClipExtension } from '@deck.gl/extensions';
 import { TileLayer } from '@deck.gl/geo-layers';
@@ -40,12 +41,6 @@ type GeoJsonFeature = {
   id: string;
 };
 
-type TooltipInfo = {
-  x: number;
-  y: number;
-  content: string;
-};
-
 export interface MapProps {
   featureTileSourceURL: string;
   focusedFeatureId?: string;
@@ -57,7 +52,7 @@ export const Map: FC<MapProps> = ({
   focusedFeatureId,
   initialViewState = INITIAL_VIEW_STATE,
 }) => {
-  const [tooltipInfo, setTooltipInfo] = useState<TooltipInfo | null>(null);
+  const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
 
   const basemapLayer = useMemo(() => {
     return new TileLayer({
@@ -93,13 +88,13 @@ export const Map: FC<MapProps> = ({
       onHover: (info) => {
         if (info.object) {
           const properties = validateGeoJsonFeature(info.object.properties);
-          setTooltipInfo({
+          setTooltipProps({
             x: info.x,
             y: info.y,
             content: properties.id,
           });
         } else {
-          setTooltipInfo(null);
+          setTooltipProps(null);
         }
       },
       renderSubLayers: ({ data, tile }) => {
@@ -126,11 +121,14 @@ export const Map: FC<MapProps> = ({
   }, [featureTileSource, focusedFeatureId]);
 
   return (
-    <DeckGL
-      initialViewState={initialViewState}
-      controller
-      layers={[basemapLayer, featureLayer]}
-    />
+    <>
+      <DeckGL
+        initialViewState={initialViewState}
+        controller
+        layers={[basemapLayer, featureLayer]}
+      />
+      {tooltipProps && <Tooltip {...tooltipProps} />}
+    </>
   );
 };
 
