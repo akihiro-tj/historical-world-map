@@ -28,6 +28,7 @@ const basemapTileSource = new PMTilesSource({
 
 const geoJsonFeatureSchema = z.object({
   id: z.string(),
+  name: z.string(),
 });
 
 type BBox = {
@@ -91,7 +92,7 @@ export const Map: FC<MapProps> = ({
           setTooltipProps({
             x: info.x,
             y: info.y,
-            content: properties.id,
+            content: properties.name,
           });
         } else {
           setTooltipProps(null);
