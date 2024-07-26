@@ -7,7 +7,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from '@/components/shadcn-ui/sheet';
+} from '@/components/sheet';
 import { FC, MouseEventHandler } from 'react';
 
 export interface MapModalContentProps {
