@@ -14,7 +14,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <div>
-      <div dangerouslySetInnerHTML={{ __html: article.contentHtml }} />
+      <div
+        className="px-4 py-6 prose lg:prose-lg"
+        dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+      />
       <MapModal />
     </div>
   );
