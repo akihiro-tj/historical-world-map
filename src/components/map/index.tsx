@@ -37,21 +37,21 @@ type GeoJsonFeature = {
 };
 
 export interface MapProps {
-  tileSourceURL: string;
-  focusedFeatureId?: string;
+  year: number;
+  countryId?: string;
   initialViewState?: MapViewState;
 }
 
 export const Map: FC<MapProps> = ({
-  tileSourceURL,
-  focusedFeatureId,
+  year,
+  countryId,
   initialViewState = INITIAL_VIEW_STATE,
 }) => {
   const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
 
   const tileSource = useMemo(() => {
-    return new PMTilesSource({ url: tileSourceURL });
-  }, [tileSourceURL]);
+    return new PMTilesSource({ url: `/data/${year}.pmtiles` });
+  }, [year]);
 
   const tileLayer = useMemo(() => {
     return new TileLayer({
@@ -89,32 +89,30 @@ export const Map: FC<MapProps> = ({
           lineWidthMinPixels: 2,
           getLineColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME?.toLowerCase() === focusedFeatureId ||
-              !focusedFeatureId
+            return countryId && properties.NAME === countryId
               ? [34, 211, 238, 255]
               : [100, 116, 139, 150];
           },
           getFillColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME?.toLowerCase() === focusedFeatureId ||
-              !focusedFeatureId
+            return countryId && properties.NAME === countryId
               ? [34, 211, 238, 150]
               : [100, 116, 139, 100];
           },
         });
       },
     });
-  }, [tileSource, focusedFeatureId]);
+  }, [tileSource, countryId]);
 
   return (
-    <>
+    <div className="[&_#deckgl-wrapper]:bg-slate-900">
       <DeckGL
         initialViewState={initialViewState}
         controller
         layers={[tileLayer]}
       />
       {tooltipProps && <Tooltip {...tooltipProps} />}
-    </>
+    </div>
   );
 };
 

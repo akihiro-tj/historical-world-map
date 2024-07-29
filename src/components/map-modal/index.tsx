@@ -31,19 +31,19 @@ async function fetcher(
   hash: string | undefined
 ): Promise<MapProps | undefined> {
   if (!hash) return;
-  const [year, focusedFeatureId] = hash.split('-');
-  const focusedFeature = await mapFeatureRepository.getByYearAndFeatureId(
+  const [year, countryId] = hash.split('-');
+  const focusedCountry = await mapFeatureRepository.getByYearAndCountryId(
     year,
-    focusedFeatureId
+    countryId
   );
   const initialViewState = {
-    longitude: focusedFeature.longitude,
-    latitude: focusedFeature.latitude,
-    zoom: focusedFeature.zoom,
+    longitude: focusedCountry.longitude,
+    latitude: focusedCountry.latitude,
+    zoom: focusedCountry.zoom,
   };
   return {
-    tileSourceURL: `/data/${year}.pmtiles`,
-    focusedFeatureId,
+    year: +year,
+    countryId,
     initialViewState,
   };
 }

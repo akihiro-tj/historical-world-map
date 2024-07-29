@@ -8,7 +8,6 @@ const meta: Meta<typeof Map> = {
 export default meta;
 type Story = StoryObj<typeof Map>;
 
-const tileSourceURL = '/data/1815.pmtiles';
 const initialViewState = {
   longitude: -3.7492,
   latitude: 40.4637,
@@ -17,15 +16,15 @@ const initialViewState = {
 
 export const Default: Story = {
   args: {
-    tileSourceURL,
+    year: 1815,
     initialViewState,
   },
 };
 
 export const Focused: Story = {
   args: {
-    tileSourceURL,
-    focusedFeatureId: 'spain',
+    year: 1815,
+    countryId: 'Spain',
     initialViewState,
   },
 };

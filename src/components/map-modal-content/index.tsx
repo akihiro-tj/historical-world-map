@@ -28,9 +28,11 @@ export const MapModalContent: FC<MapModalContentProps> = ({
         onClose={onClose}
       >
         <SheetHeader className="relative z-10 space-y-1 mr-10">
-          <SheetTitle className="text-white text-left">Country name</SheetTitle>
+          <SheetTitle className="text-white text-left">
+            {mapProps?.countryId}
+          </SheetTitle>
           <SheetDescription className="text-white text-left">
-            1234
+            {mapProps?.year}
           </SheetDescription>
         </SheetHeader>
         {mapProps && <Map {...mapProps} />}
