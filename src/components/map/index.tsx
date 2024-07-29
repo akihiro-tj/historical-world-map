@@ -27,8 +27,7 @@ const basemapTileSource = new PMTilesSource({
 });
 
 const geoJsonFeatureSchema = z.object({
-  id: z.string(),
-  name: z.string(),
+  NAME: z.string().optional(),
 });
 
 type BBox = {
@@ -89,11 +88,14 @@ export const Map: FC<MapProps> = ({
       onHover: (info) => {
         if (info.object) {
           const properties = validateGeoJsonFeature(info.object.properties);
-          setTooltipProps({
-            x: info.x,
-            y: info.y,
-            content: properties.name,
-          });
+          const tooltipProps = properties.NAME
+            ? {
+                x: info.x,
+                y: info.y,
+                content: properties.NAME,
+              }
+            : null;
+          setTooltipProps(tooltipProps);
         } else {
           setTooltipProps(null);
         }
@@ -108,14 +110,20 @@ export const Map: FC<MapProps> = ({
           clipBounds: [bbox.west, bbox.south, bbox.east, bbox.north],
           lineWidthScale: 1,
           lineWidthMinPixels: 2,
-          getLineColor: (d) =>
-            d.properties.id === focusedFeatureId || !focusedFeatureId
+          getLineColor: (d) => {
+            const properties = validateGeoJsonFeature(d.properties);
+            return properties.NAME?.toLowerCase() === focusedFeatureId ||
+              !focusedFeatureId
               ? [200, 100, 100, 200]
-              : [200, 100, 100, 50],
-          getFillColor: (d) =>
-            d.properties.id === focusedFeatureId || !focusedFeatureId
+              : [200, 100, 100, 50];
+          },
+          getFillColor: (d) => {
+            const properties = validateGeoJsonFeature(d.properties);
+            return properties.NAME?.toLowerCase() === focusedFeatureId ||
+              !focusedFeatureId
               ? [200, 100, 100, 100]
-              : [200, 100, 100, 25],
+              : [200, 100, 100, 25];
+          },
         });
       },
     });
