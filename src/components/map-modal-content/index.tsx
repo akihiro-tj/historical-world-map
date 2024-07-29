@@ -23,7 +23,10 @@ export const MapModalContent: FC<MapModalContentProps> = ({
 }) => {
   return (
     <Sheet open={isOpen}>
-      <SheetContent className="border-none bg-slate-900" onClose={onClose}>
+      <SheetContent
+        className="border-none bg-slate-900 w-full"
+        onClose={onClose}
+      >
         <SheetHeader className="relative z-10 space-y-1">
           <SheetTitle className="text-white text-left">Spain</SheetTitle>
           <SheetDescription className="text-white text-left">
