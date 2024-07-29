@@ -13,8 +13,8 @@ export const Default: Story = {
     isOpen: true,
     onClose: () => {},
     mapProps: {
-      tileSourceURL: '/data/1815.pmtiles',
-      focusedFeatureId: 'spain',
+      year: 1815,
+      focusedFeatureId: 'Spain',
       initialViewState: {
         longitude: -3.7492,
         latitude: 40.4637,

@@ -37,21 +37,21 @@ type GeoJsonFeature = {
 };
 
 export interface MapProps {
-  tileSourceURL: string;
+  year: number;
   focusedFeatureId?: string;
   initialViewState?: MapViewState;
 }
 
 export const Map: FC<MapProps> = ({
-  tileSourceURL,
+  year,
   focusedFeatureId,
   initialViewState = INITIAL_VIEW_STATE,
 }) => {
   const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
 
   const tileSource = useMemo(() => {
-    return new PMTilesSource({ url: tileSourceURL });
-  }, [tileSourceURL]);
+    return new PMTilesSource({ url: `/data/${year}.pmtiles` });
+  }, [year]);
 
   const tileLayer = useMemo(() => {
     return new TileLayer({
@@ -89,15 +89,13 @@ export const Map: FC<MapProps> = ({
           lineWidthMinPixels: 2,
           getLineColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME?.toLowerCase() === focusedFeatureId ||
-              !focusedFeatureId
+            return properties.NAME === focusedFeatureId || !focusedFeatureId
               ? [34, 211, 238, 255]
               : [100, 116, 139, 150];
           },
           getFillColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME?.toLowerCase() === focusedFeatureId ||
-              !focusedFeatureId
+            return properties.NAME === focusedFeatureId || !focusedFeatureId
               ? [34, 211, 238, 150]
               : [100, 116, 139, 100];
           },
