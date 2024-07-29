@@ -32,6 +32,11 @@ export class ArticleRepositoryImpl implements ArticleRepository {
     return fileNames.map((fileName) => path.parse(fileName).name);
   }
 
+  async getAll(): Promise<Article[]> {
+    const ids = await this.getAllIds();
+    return Promise.all(ids.map((id) => this.getById(id)));
+  }
+
   private validateFrontMatter(data: any) {
     const result = frontMatterSchema.safeParse(data);
     if (!result.success) {
