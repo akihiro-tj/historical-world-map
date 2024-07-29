@@ -107,14 +107,14 @@ export const Map: FC<MapProps> = ({
   }, [tileSource, focusedFeatureId]);
 
   return (
-    <div className="[&_#deckgl-wrapper]:bg-slate-900">
+    <>
       <DeckGL
         initialViewState={initialViewState}
         controller
         layers={[tileLayer]}
       />
       {tooltipProps && <Tooltip {...tooltipProps} />}
-    </div>
+    </>
   );
 };
 
