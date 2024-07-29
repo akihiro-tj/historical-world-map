@@ -38,13 +38,13 @@ type GeoJsonFeature = {
 
 export interface MapProps {
   year: number;
-  focusedFeatureId?: string;
+  countryId?: string;
   initialViewState?: MapViewState;
 }
 
 export const Map: FC<MapProps> = ({
   year,
-  focusedFeatureId,
+  countryId,
   initialViewState = INITIAL_VIEW_STATE,
 }) => {
   const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
@@ -89,20 +89,20 @@ export const Map: FC<MapProps> = ({
           lineWidthMinPixels: 2,
           getLineColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME === focusedFeatureId || !focusedFeatureId
+            return properties.NAME === countryId || !countryId
               ? [34, 211, 238, 255]
               : [100, 116, 139, 150];
           },
           getFillColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME === focusedFeatureId || !focusedFeatureId
+            return properties.NAME === countryId || !countryId
               ? [34, 211, 238, 150]
               : [100, 116, 139, 100];
           },
         });
       },
     });
-  }, [tileSource, focusedFeatureId]);
+  }, [tileSource, countryId]);
 
   return (
     <>

@@ -24,7 +24,7 @@ export const Default: Story = {
 export const Focused: Story = {
   args: {
     year: 1815,
-    focusedFeatureId: 'Spain',
+    countryId: 'Spain',
     initialViewState,
   },
 };

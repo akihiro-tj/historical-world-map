@@ -29,7 +29,7 @@ export const MapModalContent: FC<MapModalContentProps> = ({
       >
         <SheetHeader className="relative z-10 space-y-1 mr-10">
           <SheetTitle className="text-white text-left">
-            {mapProps?.focusedFeatureId}
+            {mapProps?.countryId}
           </SheetTitle>
           <SheetDescription className="text-white text-left">
             {mapProps?.year}

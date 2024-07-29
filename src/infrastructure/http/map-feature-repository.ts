@@ -12,9 +12,9 @@ const mapFeatureSchema = z.object({
 const mapFeatureListSchema = z.array(mapFeatureSchema);
 
 export class MapFeatureRepositoryImpl implements MapFeatureRepository {
-  async getByYearAndFeatureId(
+  async getByYearAndCountryId(
     year: string,
-    featureId: string
+    countryId: string
   ): Promise<MapFeature> {
     const rawData = await tsv(`/data/${year}.tsv`);
     const data = this.validateMapFeatureList(rawData);
@@ -25,10 +25,10 @@ export class MapFeatureRepositoryImpl implements MapFeatureRepository {
       zoom: +d.zoom,
     }));
     const mapFeature = mapFeatureList.find(
-      (feature) => feature.id === featureId
+      (feature) => feature.id === countryId
     );
     if (!mapFeature) {
-      throw new Error(`Map feature not found: ${featureId}`);
+      throw new Error(`Map feature not found: ${countryId}`);
     }
     return mapFeature;
   }

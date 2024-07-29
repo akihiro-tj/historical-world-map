@@ -14,7 +14,7 @@ export const Default: Story = {
     onClose: () => {},
     mapProps: {
       year: 1815,
-      focusedFeatureId: 'Spain',
+      countryId: 'Spain',
       initialViewState: {
         longitude: -3.7492,
         latitude: 40.4637,
