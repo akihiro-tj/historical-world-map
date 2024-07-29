@@ -25,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
+        className="bg-slate-950 text-white"
         style={{
           fontFamily: [
             inter.style.fontFamily,
