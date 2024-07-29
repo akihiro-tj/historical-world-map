@@ -80,7 +80,7 @@ const SheetContent = React.forwardRef<
     >
       {children}
       <SheetClose onClick={onClose}>
-        <X className="h-4 w-4" />
+        <X className="h-10 w-10" />
         <span className="sr-only">Close</span>
       </SheetClose>
     </SheetPrimitive.Content>
