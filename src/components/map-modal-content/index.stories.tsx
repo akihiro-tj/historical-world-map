@@ -13,8 +13,7 @@ export const Default: Story = {
     isOpen: true,
     onClose: () => {},
     mapProps: {
-      // TODO: Replace url
-      featureTileSourceURL: 'http://localhost:2999/1815.pmtiles',
+      tileSourceURL: '/data/1815.pmtiles',
       focusedFeatureId: 'spain',
       initialViewState: {
         longitude: -3.7492,
