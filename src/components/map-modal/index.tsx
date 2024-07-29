@@ -42,7 +42,7 @@ async function fetcher(
     zoom: focusedFeature.zoom,
   };
   return {
-    featureTileSourceURL: `/data/${year}.pmtiles`,
+    tileSourceURL: `/data/${year}.pmtiles`,
     focusedFeatureId,
     initialViewState,
   };

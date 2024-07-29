@@ -21,11 +21,6 @@ const ZOOM_SETTINGS = {
   maxZoom: 5,
 };
 
-const basemapTileSource = new PMTilesSource({
-  // TODO: Replace url
-  url: 'http://localhost:2999/ne_110m_land.pmtiles',
-});
-
 const geoJsonFeatureSchema = z.object({
   NAME: z.string().optional(),
 });
@@ -42,48 +37,27 @@ type GeoJsonFeature = {
 };
 
 export interface MapProps {
-  featureTileSourceURL: string;
+  tileSourceURL: string;
   focusedFeatureId?: string;
   initialViewState?: MapViewState;
 }
 
 export const Map: FC<MapProps> = ({
-  featureTileSourceURL,
+  tileSourceURL,
   focusedFeatureId,
   initialViewState = INITIAL_VIEW_STATE,
 }) => {
   const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
 
-  const basemapLayer = useMemo(() => {
-    return new TileLayer({
-      id: 'basemap-layer',
-      ...ZOOM_SETTINGS,
-      getTileData: basemapTileSource.getTileData,
-      renderSubLayers: ({ data, tile }) => {
-        const bbox = tile.bbox as BBox;
-        return new GeoJsonLayer({
-          id: `basemap-layer--${tile.id}`,
-          data,
-          extensions: [new ClipExtension()],
-          clipBounds: [bbox.west, bbox.south, bbox.east, bbox.north],
-          lineWidthScale: 1,
-          lineWidthMinPixels: 2,
-          getLineColor: [200, 200, 200],
-          filled: false,
-        });
-      },
-    });
-  }, []);
+  const tileSource = useMemo(() => {
+    return new PMTilesSource({ url: tileSourceURL });
+  }, [tileSourceURL]);
 
-  const featureTileSource = useMemo(() => {
-    return new PMTilesSource({ url: featureTileSourceURL });
-  }, [featureTileSourceURL]);
-
-  const featureLayer = useMemo(() => {
+  const tileLayer = useMemo(() => {
     return new TileLayer({
       id: 'feature-layer',
       ...ZOOM_SETTINGS,
-      getTileData: featureTileSource.getTileData,
+      getTileData: tileSource.getTileData,
       pickable: true,
       onHover: (info) => {
         if (info.object) {
@@ -127,14 +101,14 @@ export const Map: FC<MapProps> = ({
         });
       },
     });
-  }, [featureTileSource, focusedFeatureId]);
+  }, [tileSource, focusedFeatureId]);
 
   return (
     <>
       <DeckGL
         initialViewState={initialViewState}
         controller
-        layers={[basemapLayer, featureLayer]}
+        layers={[tileLayer]}
       />
       {tooltipProps && <Tooltip {...tooltipProps} />}
     </>
