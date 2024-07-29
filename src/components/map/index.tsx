@@ -74,6 +74,9 @@ export const Map: FC<MapProps> = ({
           setTooltipProps(null);
         }
       },
+      onDrag: () => {
+        setTooltipProps(null);
+      },
       renderSubLayers: ({ data, tile }) => {
         const bbox = tile.bbox as BBox;
         return new GeoJsonLayer<GeoJsonFeature, { clipBounds: number[] }>({
