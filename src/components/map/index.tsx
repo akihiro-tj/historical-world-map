@@ -88,15 +88,15 @@ export const Map: FC<MapProps> = ({
             const properties = validateGeoJsonFeature(d.properties);
             return properties.NAME?.toLowerCase() === focusedFeatureId ||
               !focusedFeatureId
-              ? [200, 100, 100, 200]
-              : [200, 100, 100, 50];
+              ? [34, 211, 238, 255]
+              : [100, 116, 139, 150];
           },
           getFillColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
             return properties.NAME?.toLowerCase() === focusedFeatureId ||
               !focusedFeatureId
-              ? [200, 100, 100, 100]
-              : [200, 100, 100, 25];
+              ? [34, 211, 238, 150]
+              : [100, 116, 139, 100];
           },
         });
       },
@@ -104,14 +104,14 @@ export const Map: FC<MapProps> = ({
   }, [tileSource, focusedFeatureId]);
 
   return (
-    <>
+    <div className="[&_#deckgl-wrapper]:bg-slate-900">
       <DeckGL
         initialViewState={initialViewState}
         controller
         layers={[tileLayer]}
       />
       {tooltipProps && <Tooltip {...tooltipProps} />}
-    </>
+    </div>
   );
 };
 
