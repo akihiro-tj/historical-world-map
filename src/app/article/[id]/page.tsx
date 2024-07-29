@@ -14,7 +14,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <main>
-      <article className="px-4 py-8 mx-auto prose lg:prose-lg">
+      <article className="px-4 py-8 mx-auto prose prose-invert lg:prose-lg">
         <h1>{article.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: article.contentHtml }} />
       </article>
