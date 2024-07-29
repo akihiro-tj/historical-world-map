@@ -75,7 +75,7 @@ const SheetContent = React.forwardRef<
     <SheetOverlay onClick={onClose} />
     <SheetPrimitive.Content
       ref={ref}
-      className={cn(sheetVariants({ side }), className)}
+      className={cn(sheetVariants({ side }), 'border-none', className)}
       {...props}
     >
       {children}
@@ -94,7 +94,7 @@ const SheetHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-col space-y-2 text-center sm:text-left',
+      'relative z-10 flex flex-col space-y-2 text-center sm:text-left',
       className
     )}
     {...props}
