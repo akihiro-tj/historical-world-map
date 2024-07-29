@@ -89,13 +89,13 @@ export const Map: FC<MapProps> = ({
           lineWidthMinPixels: 2,
           getLineColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME === countryId || !countryId
+            return countryId && properties.NAME === countryId
               ? [34, 211, 238, 255]
               : [100, 116, 139, 150];
           },
           getFillColor: (d) => {
             const properties = validateGeoJsonFeature(d.properties);
-            return properties.NAME === countryId || !countryId
+            return countryId && properties.NAME === countryId
               ? [34, 211, 238, 150]
               : [100, 116, 139, 100];
           },
@@ -105,14 +105,14 @@ export const Map: FC<MapProps> = ({
   }, [tileSource, countryId]);
 
   return (
-    <>
+    <div className="[&_#deckgl-wrapper]:bg-slate-900">
       <DeckGL
         initialViewState={initialViewState}
         controller
         layers={[tileLayer]}
       />
       {tooltipProps && <Tooltip {...tooltipProps} />}
-    </>
+    </div>
   );
 };
 
