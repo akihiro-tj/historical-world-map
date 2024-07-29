@@ -13,13 +13,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   const article = await articleRepository.getById(params.id);
 
   return (
-    <div>
-      <div
-        className="px-4 py-6 prose lg:prose-lg"
-        dangerouslySetInnerHTML={{ __html: article.contentHtml }}
-      />
+    <main>
+      <article className="px-4 py-8 mx-auto prose lg:prose-lg">
+        <h1>{article.title}</h1>
+        <div dangerouslySetInnerHTML={{ __html: article.contentHtml }} />
+      </article>
       <MapModal />
-    </div>
+    </main>
   );
 }
 
