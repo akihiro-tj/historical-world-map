@@ -7,7 +7,7 @@ export const useLocationHash = () => {
     const handleHashChange = () => {
       const hasHash = window.location.hash.match(/#.+/);
       if (hasHash) {
-        setHash(window.location.hash.slice(1));
+        setHash(decodeURI(window.location.hash.slice(1)));
       } else {
         setHash(undefined);
       }
