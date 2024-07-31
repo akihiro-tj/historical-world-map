@@ -27,3 +27,10 @@ export async function generateStaticParams() {
   const ids = await articleRepository.getAllIds();
   return ids.map((id) => ({ id }));
 }
+
+export async function generateMetadata({ params }: ArticlePageProps) {
+  const article = await articleRepository.getById(params.id);
+  return {
+    title: article.title,
+  };
+}
